@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>RetailEdge | Inventory</title>
+    <link rel="stylesheet" th:href="@{/css/inventory.css}">
+    <script th:src="@{/js/inventory.js}" defer></script>
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" href="/inventory-ui" aria-label="RetailEdge inventory home">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>RetailEdge</span>
+    </a>
+    <span class="topbar-label">OPERATIONS / INVENTORY</span>
+</header>
+
+<main class="shell">
+    <section class="page-heading">
+        <div>
+            <p class="eyebrow">STOCK CONTROL</p>
+            <h1>Inventory console</h1>
+            <p class="intro">Create records, check availability, and update stock with version protection.</p>
+        </div>
+        <span class="api-badge"><span class="status-dot"></span> API ready</span>
+    </section>
+
+    <section class="connection" aria-labelledby="connection-title">
+        <div class="section-title">
+            <span class="section-number">01</span>
+            <div>
+                <h2 id="connection-title">Request context</h2>
+                <p>Credentials are held only in this page and sent to the API over this origin.</p>
+            </div>
+        </div>
+        <div class="context-fields">
+            <label>
+                Store ID
+                <input id="storeId" name="storeId" maxlength="100" autocomplete="organization" placeholder="store-001" required>
+            </label>
+            <label class="token-field">
+                Bearer token
+                <input id="accessToken" name="accessToken" type="password" autocomplete="off" spellcheck="false" placeholder="Paste an access token" required>
+            </label>
+        </div>
+        <p class="security-note">The token is not saved to browser storage or included in request logs.</p>
+    </section>
+
+    <div class="workspace">
+        <section class="operations" aria-label="Inventory operations">
+            <article class="operation operation-create">
+                <div class="operation-heading">
+                    <span class="method method-post">POST</span>
+                    <div>
+                        <h2>Create inventory</h2>
+                        <code>/api/stores/{storeId}/inventory</code>
+                    </div>
+                </div>
+                <form id="createForm" class="fields">
+                    <label>Product ID<input id="createProductId" maxlength="100" placeholder="SKU-1042" required></label>
+                    <label>Starting stock<input id="createStock" type="number" min="0" step="1" value="0" required></label>
+                    <button type="submit" class="button button-primary">Create record <span aria-hidden="true">↗</span></button>
+                </form>
+            </article>
+
+            <article class="operation">
+                <div class="operation-heading">
+                    <span class="method method-get">GET</span>
+                    <div>
+                        <h2>Get by product</h2>
+                        <code>/api/stores/{storeId}/inventory/{productId}</code>
+                    </div>
+                </div>
+                <form id="getForm" class="fields fields-single">
+                    <label>Product ID<input id="getProductId" maxlength="100" placeholder="SKU-1042" required></label>
+                    <button type="submit" class="button button-secondary">Fetch inventory <span aria-hidden="true">→</span></button>
+                </form>
+            </article>
+
+            <article class="operation">
+                <div class="operation-heading">
+                    <span class="method method-put">PUT</span>
+                    <div>
+                        <h2>Update stock</h2>
+                        <code>/api/stores/{storeId}/inventory/{productId}/stock</code>
+                    </div>
+                </div>
+                <form id="updateForm" class="fields">
+                    <label>Product ID<input id="updateProductId" maxlength="100" placeholder="SKU-1042" required></label>
+                    <label>New quantity<input id="updateStock" type="number" min="0" step="1" required></label>
+                    <label>Expected version<input id="expectedVersion" type="number" min="0" step="1" value="0" required></label>
+                    <button type="submit" class="button button-primary">Set stock <span aria-hidden="true">↗</span></button>
+                </form>
+            </article>
+
+            <article class="operation operation-delete">
+                <div class="operation-heading">
+                    <span class="method method-delete">DELETE</span>
+                    <div>
+                        <h2>Delete inventory</h2>
+                        <code>/api/stores/{storeId}/inventory/{productId}?version={version}</code>
+                    </div>
+                </div>
+                <form id="deleteForm" class="fields fields-single">
+                    <label>Product ID<input id="deleteProductId" maxlength="100" placeholder="SKU-1042" required></label>
+                    <button type="submit" class="button button-danger">Delete record <span aria-hidden="true">×</span></button>
+                </form>
+            </article>
+        </section>
+
+        <aside class="response-panel" aria-labelledby="response-title">
+            <div class="response-heading">
+                <div>
+                    <p class="eyebrow">LIVE RESPONSE</p>
+                    <h2 id="response-title">Request output</h2>
+                </div>
+                <span id="responseStatus" class="response-status">IDLE</span>
+            </div>
+            <p id="requestLine" class="request-line">Choose an operation to call the inventory API.</p>
+            <pre id="responseBody" aria-live="polite">Response data will appear here.</pre>
+            <p class="version-note">Use the returned <code>version</code> for the next update or delete.</p>
+        </aside>
+    </div>
+</main>
+</body>
+</html>
